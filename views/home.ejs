@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Auth Page</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f0f0f0;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+    }
+
+    .auth-card {
+      background: #fff;
+      padding: 2rem;
+      width: 350px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease-in-out;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .toggle-link {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .toggle-link a {
+      color: #007BFF;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .btn {
+      padding: 0.6rem;
+      width: 100%;
+      border-radius: 8px;
+      text-align: center;
+      display: block;
+      margin-top: 0.5rem;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+    }
+
+    .google-btn {
+      background: #db4437;
+    }
+
+    .facebook-btn {
+      background: #3b5998;
+    }
+
+    .signup-btn {
+      background: #007BFF;
+    }
+
+    .login-btn {
+      background: #28a745;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+
+  <div class="auth-card">
+    <!-- Signup View -->
+    <div id="signupView">
+      <h2>Sign Up</h2>
+      <div class="form-group">
+        <input type="text" id="firstName" placeholder="First Name" required>
+      </div>
+      <div class="form-group">
+        <input type="text" id="lastName" placeholder="Last Name" required>
+      </div>
+      <div class="form-group">
+        <input type="email" id="signupEmail" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <input type="password" id="signupPassword" placeholder="Password" required>
+      </div>
+      <button class="btn signup-btn" onclick="handleSignup()">Sign Up</button>
+      <a href="/api/auth/google" class="btn google-btn">Sign up with Google</a>
+      <a href="/api/auth/facebook" class="btn facebook-btn">Sign up with Facebook</a>
+      <div class="toggle-link">
+        Already have an account? <a onclick="toggleView()">Log In</a>
+      </div>
+    </div>
+
+    <!-- Login View -->
+    <div id="loginView" style="display: none;">
+      <h2>Log In</h2>
+      <div class="form-group">
+        <input type="email" id="loginEmail" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <input type="password" id="loginPassword" placeholder="Password" required>
+      </div>
+      <button class="btn login-btn" onclick="handleLogin()">Log in</button>
+      <a href="/api/auth/google" class="btn google-btn">Log in with Google</a>
+      <a href="/api/auth/facebook" class="btn facebook-btn">Log in with Facebook</a>
+      <div class="toggle-link">
+        Don't have an account? <a onclick="toggleView()">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const signup = document.getElementById('signupView');
+    const login = document.getElementById('loginView');
+    function toggleView() {
+      if (signup.style.display === 'none') {
+        signup.style.display = 'block';
+        login.style.display = 'none';
+      } else {
+        signup.style.display = 'none';
+        login.style.display = 'block';
+      }
+    }
+
+  async  function handleSignup() {
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName = document.getElementById('lastName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const password = document.getElementById('signupPassword').value;
+    
+    if (!firstName || !lastName || !email || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
+try{
+      
+    const response = await axios.post("http://localhost:3000/api/auth/signup",{email,password,firstName,lastName},{
+    headers:{
+      "Content-type":"application/json"
+    }
+  })
+  console.log(response);
+
+  signup.style.display = 'none';
+  login.style.display = 'block';
+}
+catch(error){
+  console.log(error);
+  alert(error.response.data.message);
+}
+}
+
+async function handleLogin() {
+   const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+
+   try{
+     const response =await axios.post("http://localhost:3000/api/auth/login",{email,password},{
+      headers:{
+        "Content-type":"application/json"
+      }
+    });
+    console.log(response);
+      window.location.href = "/profile";
+   }
+   catch(error){
+    console.log(error);
+    alert(error.response.data.message);
+   }
+
+}
+</script>
+</body>
+</html>

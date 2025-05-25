@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .profile-card {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+      width: 350px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      margin: 0.3rem 0;
+    }
+
+    .logout {
+      margin-top: 1rem;
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: #dc3545;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-card">
+    <h1 id="welcomeMessage">Loading...</h1>
+    <p id="fullName"></p>
+    <p id="email"></p>
+    <a class="logout" href="/">Logout</a>
+  </div>
+
+<script>
+  function loadProfile() {
+    
+    // Embed user data safely as JS variables using EJS interpolation
+    const user = {
+      firstName: "<%= user.firstName %>",
+      lastName: "<%= user.lastName %>",
+      email: "<%= user.email %>"
+    };
+
+    document.getElementById("welcomeMessage").innerText = `Welcome, ${user.firstName}`;
+    document.getElementById("fullName").innerText = `Full Name: ${user.firstName} ${user.lastName}`;
+    document.getElementById("email").innerText = `Email: ${user.email}`;
+  }
+  loadProfile();
+</script>
+
+</body>
+</html>
